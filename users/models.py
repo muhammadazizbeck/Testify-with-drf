@@ -6,6 +6,7 @@ import random
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
+    is_superadmin = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

