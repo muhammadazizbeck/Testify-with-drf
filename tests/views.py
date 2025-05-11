@@ -75,7 +75,37 @@ class MyTestAPIView(APIView):
         return Response(response,status=status.HTTP_200_OK)
     
 class CreateTestAPIView(APIView):
-    pass
+    permission_classes = [permissions.IsAuthenticated,IsSuperAdmin]
+
+    def post(self,request):
+        serializer = TestSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            response = {
+                'code':201,
+                'message':"You have successfully created test",
+                'data':serializer.data
+            }
+            return Response(response,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+class CreateCategoryAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated,IsSuperAdmin]
+
+    def post(self,request):
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            response = {
+                'code':201,
+                'message':"You have successfully created category",
+                "data":serializer.data
+            }
+            return Response(response,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+
+    
     
 
     
