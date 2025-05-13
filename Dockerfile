@@ -14,22 +14,21 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-
+# 5. Python kutubxonalarini o'rnatish
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Dockerfile
-RUN python manage.py collectstatic --noinput
-
-
-
-# 5. Djangoni ishlatish
+# 6. Djangoni ishlatish
 COPY . /app/
 
-# 6. Portni ochish
+# 7. Static fayllarni to'plamoq
+RUN python manage.py collectstatic --noinput
+
+# 8. Portni ochish
 EXPOSE 8000
 
-# 7. Django serverini ishga tushirish
+# 9. Django serverini ishga tushirish
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
+
 
 
 
