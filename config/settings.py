@@ -16,7 +16,16 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG',default=False,cast=bool)
 
-ALLOWED_HOSTS = ["98.81.248.120"]
+# HTTPS ga yo'naltirish
+SECURE_SSL_REDIRECT = True
+
+# Xavfsiz cookie-lar uchun
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Xavfsiz xostlar
+ALLOWED_HOSTS = ['98.81.248.120']
+
 
 
 # Application definition
@@ -141,7 +150,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# settings.py
+
+STATIC_URL = '/static/'
+
+# Static fayllarni to'g'ri joylashgan papkaga ko'rsatish
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+# Production muhitida static fayllarni to'plash
+if not DEBUG:
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
