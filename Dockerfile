@@ -20,8 +20,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 6. Djangoni ishlatish
 COPY . /app/
 
-# 7. Static fayllarni to'plamoq
-RUN python manage.py collectstatic --noinput
 
 # 8. Portni ochish
 EXPOSE 8000
