@@ -16,12 +16,6 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG',default=False,cast=bool)
 
-# HTTPS ga yo'naltirish
-SECURE_SSL_REDIRECT = True
-
-# Xavfsiz cookie-lar uchun
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
 
 # Xavfsiz xostlar
 ALLOWED_HOSTS = ['54.221.165.170']
