@@ -20,6 +20,10 @@ DEBUG = config('DEBUG',default=False,cast=bool)
 # Xavfsiz xostlar
 ALLOWED_HOSTS = ['54.221.165.170']
 
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+
 
 
 # Application definition
