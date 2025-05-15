@@ -152,14 +152,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Static fayllarni to'g'ri joylashgan papkaga ko'rsatish
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-# Production muhitida static fayllarni to'plash
-if not DEBUG:
-    STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
 # Default primary key field type
