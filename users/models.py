@@ -21,10 +21,11 @@ class EmailOTP(models.Model):
     def is_expired(self):
         return self.created_at < timezone.now() - timezone.timedelta(minutes=5)
 
-    def generate_otp(self):
-        self.otp_code = "".join(str(random.randint(1,9)) for _ in range(6))
-        self.created_at = timezone.now()
-        self.save()
+    @classmethod
+    def generate_otp(cls, email):
+        cls.objects.filter(email=email).delete()
+        otp_code = "".join(str(random.randint(1, 9)) for _ in range(6))
+        return cls.objects.create(email=email, otp_code=otp_code)
 
     
 

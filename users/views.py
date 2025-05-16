@@ -3,9 +3,8 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 
 from users.tasks import sent_otp_email_task
-from users.tokens import generate_jwt_tokens
 from users.models import EmailOTP
-from users.serializers import EmailSerializer,OTPVerifySerializer
+from users.serializers import RegisterSerializer,VerifyOTPSerializer
 
 from rest_framework import status
 from rest_framework.views import APIView
@@ -19,57 +18,32 @@ User = get_user_model()
 
 # Create your views here.
 
-class SendOTPAPIView(APIView):
+class RegisterAPIView(APIView):
     def post(self,request):
-        serializer = EmailSerializer(data=request.data)
+        serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        email = serializer.validated_data['email']
-
-        otp = "".join(str(random.randint(1,9)) for _ in range(5))
-        EmailOTP.objects.filter(email=email).delete()
-
-        EmailOTP.objects.create(email=email,otp=otp)
-
-        sent_otp_email_task.delay(email,otp)
-
+        serializer.save()
         response = {
-            'message':'Tasdiqlash uchun kodingiz emailga yuborildi'
+            'code':201,
+            'message':"Ro'yhatdan muvaffaqiyatli o'tdingiz,Emailingizga yuborilgan bir martalik parol orqali emailingizni tasdiqlang!",
+            'data':serializer.data
         }
 
-        return Response(response)
+        return Response(response,status=status.HTTP_201_CREATED)
     
 class VerifyOTPAPIView(APIView):
     def post(self,request):
-        serializer = OTPVerifySerializer(data=request.data)
+        serializer = VerifyOTPSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        email = serializer.validated_data['email']
-        otp = serializer.validated_data['otp']
+        serializer.save()
+        response = {
+            'code':"200",
+            "message":"Emailingiz tasdiqlandi,Tizmga kirib foydalanishingiz mumkin!",
+            "data":serializer.data
+        }
         
-        try:
-            otp_obj = EmailOTP.objects.get(email=email,otp=otp)
 
-            if timezone.now()-otp_obj.created_at>timezone.timedelta(minutes=3):
-                return Response({'error':'Kod muddati tugagan'},status=status.HTTP_400_BAD_REQUEST)
-            
-            otp_obj.is_verified = True
-            otp_obj.save()
 
-            user,created = User.objects.get_or_create(email=email)
-
-            superadmin_emails = ['aaa2004bek@gmail.com', 'chesswanter1909@gmail.com']
-            if email in superadmin_emails:
-                user.is_superuser = True
-                user.is_staff = True
-                user.save()
-
-            tokens = generate_jwt_tokens(user)
-
-            otp_obj.delete()
-
-            return Response({'message':"Kirish muvaffaqiyatli amaliga oshdi","tokens":tokens})
-        
-        except EmailOTP.DoesNotExist:
-            return Response({'error':"Noto'g'ri kod yoki email"},status=status.HTTP_400_BAD_REQUEST)
         
 class LogoutAPIView(APIView):
     def post(self,request):
