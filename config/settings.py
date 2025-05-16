@@ -38,7 +38,6 @@ INSTALLED_APPS = [
 
     #internal
     'users',
-    "tests",
 
     #external
     'drf_yasg',

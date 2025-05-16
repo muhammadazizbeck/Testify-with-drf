@@ -48,8 +48,8 @@ services:
     image: postgres:latest 
     environment:
       POSTGRES_DB: testify_db
-      POSTGRES_USER: testifyuser
-      POSTGRES_PASSWORD: testifypass
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Azizbek1410
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
