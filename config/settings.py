@@ -18,7 +18,7 @@ DEBUG = config('DEBUG',default=False,cast=bool)
 
 
 # Xavfsiz xostlar
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["174.138.69.45"]
 
 # Application definition
 
