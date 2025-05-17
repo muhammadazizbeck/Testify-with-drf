@@ -41,19 +41,10 @@ class VerifyOTPAPIView(APIView):
             "message":"Emailingiz tasdiqlandi,Tizmga kirib foydalanishingiz mumkin!",
             "data":serializer.data
         }
+        return Response(response,status=status.HTTP_200_OK)
+        
         
 
-
-        
-class LogoutAPIView(APIView):
-    def post(self,request):
-        try:
-            refresh_token = request.data['refresh']
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response({'message':"Tizimdan muvaffaqiyatli chiqildi"},status=status.HTTP_205_RESET_CONTENT)
-        except Exception:
-            return Response({'error':"Token noto'g'ri yoki allaqachon eskirgan"},status=status.HTTP_400_BAD_REQUEST)
         
         
         
