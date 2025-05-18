@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'users',
 
     #external
+    "anymail",
     'drf_yasg',
     'rest_framework',
     'rest_framework_simplejwt',
