@@ -162,8 +162,8 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
 ANYMAIL = {
-    "MAILJET_API_KEY": "4d4b0e022f71fbd443d610daed86b462",
-    "MAILJET_SECRET_KEY": "17f707ad41cfd22466a6568ed1fefa61",
+    "MAILJET_API_KEY": config("MAILJET_API_KEY"),
+    "MAILJET_SECRET_KEY": config("MAILJET_SECRET_KEY"),
 }
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL") 
 
