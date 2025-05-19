@@ -1,9 +1,6 @@
-from users.models import CustomUser,EmailOTP
+from users.models import CustomUser
 from users.utils import generate_unique_username
-from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from users.utils import generate_unique_username
-from users.tasks import sent_otp_email_task
 from rest_framework_simplejwt.tokens import RefreshToken
 
 User = CustomUser

@@ -1,10 +1,9 @@
 from django.shortcuts import render
 from django.utils import timezone
-from django.contrib.auth import get_user_model
 
-from users.tasks import sent_otp_email_task
-from users.models import EmailOTP,CustomUser
-from users.serializers import RegisterSerializer,VerifyOTPSerializer,\
+
+from users.models import CustomUser
+from users.serializers import RegisterSerializer,\
     LoginSerializer,ChangePasswordSerializer
 
 from rest_framework import status,permissions
