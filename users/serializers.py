@@ -8,20 +8,19 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 User = CustomUser
 
-
 class RegisterSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ['username','email','password1','password2']
+        fields = ['username', 'email', 'password1', 'password2']
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError("Bu email allaqachon ro‘yxatdan o‘tgan.")
         return value
-    
+
     def validate_username(self, value):
         original_username = value
         count = 1
@@ -30,63 +29,35 @@ class RegisterSerializer(serializers.ModelSerializer):
             count += 1
         return value
 
-    def validate(self,data):
-        if data["password1"] != data["password2"]:
-            raise serializers.ValidationError("Parollar bir-biriga mos kelmadi")
+    def validate(self, data):
+        if data['password1'] != data['password2']:
+            raise serializers.ValidationError("Parollar bir-biriga mos kelmadi.")
         return data
-    
+
     def create(self, validated_data):
         password = validated_data.pop('password1')
         validated_data.pop('password2')
 
-        base_username = validated_data.get("username")
-        unique_username = generate_unique_username(base_username)
-        validated_data["username"] = unique_username
+        username = validated_data.get('username')
+        count = 1
+        original_username = username
+        while User.objects.filter(username=username).exists():
+            username = f"{original_username}{count}"
+            count += 1
+        validated_data['username'] = username
 
         user = User.objects.create_user(**validated_data)
         user.set_password(password)
-        user.is_active = False
+        user.is_active = True 
         user.save()
-
-        otp_obj = EmailOTP.generate_otp(user.email)
-        sent_otp_email_task.delay(user.email, otp_obj.otp_code)
-
-        return user
-    
-class VerifyOTPSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    otp = serializers.CharField(max_length=6)
-
-    def validate(self,data):
-        email = data['email']
-        otp = data['otp']
-
-        try:
-            otp_obj = EmailOTP.objects.get(email=email,otp_code=otp)
-        except EmailOTP.DoesNotExist:
-            raise serializers.ValidationError("Noto'g'ri kod yoki email")
-
-        if otp_obj.is_expired():
-            otp_obj.delete()
-            raise serializers.ValidationError("Kod eskirgan,Qayta kod olishga harakat qiling!")
-        return data
-
-    def save(self):
-        email = self.validated_data['email']
-        user = User.objects.get(email=email)
-        user.is_active = True
-        user.save()
-
-        EmailOTP.objects.filter(email=email).delete()
 
         refresh = RefreshToken.for_user(user)
-
         return {
-            'user_id':user.id,
-            'username':user.username,
-            "email":user.email,
-            'access_token':str(refresh.access_token),
-            'refresh_token':str(refresh)
+            'user_id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'access_token': str(refresh.access_token),
+            'refresh_token': str(refresh),
         }
 
 class LoginSerializer(serializers.Serializer):

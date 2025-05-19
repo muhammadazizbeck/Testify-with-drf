@@ -32,18 +32,6 @@ class RegisterAPIView(APIView):
 
         return Response(response,status=status.HTTP_201_CREATED)
     
-class VerifyOTPAPIView(APIView):
-    def post(self,request):
-        serializer = VerifyOTPSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.save()
-        response = {
-            'code':"200",
-            "message":"Emailingiz tasdiqlandi,Tizmga kirib foydalanishingiz mumkin!",
-            "data":data
-        }
-        return Response(response,status=status.HTTP_200_OK)
-    
 class LoginAPIView(APIView):
     def post(self,request):
         serializer = LoginSerializer(data=request.data)
