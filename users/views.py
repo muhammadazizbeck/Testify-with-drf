@@ -22,11 +22,11 @@ class RegisterAPIView(APIView):
     def post(self,request):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        user_data = serializer.save()
         response = {
             'code':201,
             'message':"Ro'yhatdan muvaffaqiyatli o'tdingiz,Emailingizga yuborilgan bir martalik parol orqali emailingizni tasdiqlang!",
-            'data':serializer.data
+            'data':user_data
         }
 
         return Response(response,status=status.HTTP_201_CREATED)
