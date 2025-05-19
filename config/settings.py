@@ -32,7 +32,7 @@ INSTALLED_APPS = [
 
     #internal
     'users',
-    "interface"
+    "interface",
 
     #external
     "anymail",
