@@ -7,7 +7,7 @@ def sent_otp_email_task(email,otp):
     send_mail(
         subject='Tizimga kirishni tasdiqlash kodi',
         message=f"Sizning tizimga kirishni tasdiqlash kodingiz {otp}",
-        from_email= EMAIL_HOST_USER,
+        from_email= None,
         recipient_list=[email],
         fail_silently=False
     )
