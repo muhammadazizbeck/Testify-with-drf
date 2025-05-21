@@ -1,3 +1,37 @@
 from django.db import models
 
 # Create your models here.
+
+
+class Test(models.Model):
+    title = models.CharField(max_length=120)
+    description = models.TextField()
+    is_paid = models.BooleanField(default=False)
+    price = models.DecimalField(max_digits=8,decimal_places=2,blank=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    duration = models.PositiveIntegerField(help_text="Test yechish davomiyligi")
+    question_count = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.title
+    
+class Question(models.Model):
+    test = models.ForeignKey('Test', related_name='questions', on_delete=models.CASCADE)
+    text = models.TextField()
+
+    option_1 = models.CharField(max_length=255)
+    option_2 = models.CharField(max_length=255)
+    option_3 = models.CharField(max_length=255)
+    option_4 = models.CharField(max_length=255)
+
+    correct_option = models.PositiveSmallIntegerField(choices=[
+        (1, 'Option 1'),
+        (2, 'Option 2'),
+        (3, 'Option 3'),
+        (4, 'Option 4'),
+    ])
+
+    def __str__(self):
+        return self.text
+
+    
