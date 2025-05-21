@@ -1,6 +1,12 @@
 from rest_framework import serializers
 from tests.models import Test
 
+
+class TestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Test
+        fields = ['id','title','description','is_paid','price','question_count','duration']
+
 class TestCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test

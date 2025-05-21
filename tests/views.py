@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework import permissions,status
 from rest_framework.response import Response
 
-from tests.serializers import TestCreateSerializer
+from tests.serializers import TestCreateSerializer,TestSerializer
 from tests.models import Test
 
 # Create your views here.
@@ -35,7 +35,7 @@ class FreeTestAPIView(APIView):
 
     def get(self,request):
         tests = Test.objects.filter(is_paid=False)
-        serializer = TestCreateSerializer(tests,many=True)
+        serializer = TestSerializer(tests,many=True)
         response = {
             'code':200,
             'message':"Tekin testlar ro'yhatini oldingiz!",
@@ -48,7 +48,7 @@ class PaidTestAPIView(APIView):
 
     def get(self,request):
         tests = Test.objects.filter(is_paid=True)
-        serializer = TestCreateSerializer(tests,many=True)
+        serializer = TestSerializer(tests,many=True)
         response = {
             'code':200,
             'message':"Pulli testlar ro'yhatini oldingiz!",
