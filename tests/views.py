@@ -4,7 +4,8 @@ from rest_framework.views import APIView
 from rest_framework import permissions,status
 from rest_framework.response import Response
 
-from tests.serializers import TestCreateSerializer,TestSerializer
+from tests.serializers import TestCreateSerializer,TestSerializer,QuestionCreateSerializer,\
+    TestDetailSerializer
 from tests.models import Test
 
 # Create your views here.
@@ -57,3 +58,49 @@ class PaidTestAPIView(APIView):
         return Response(response,status=status.HTTP_200_OK)
     
 
+class QuestionCreateAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self,request,test_id):
+        try:
+            test = Test.objects.get(id=test_id)
+        except Test.DoesNotExist:
+            response = {
+                'code':400,
+                'message':"Test topilmadi"
+            }
+            return Response(response,status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = QuestionCreateSerializer(data=request.data,context={'test':test})
+
+        if serializer.is_valid():
+            serializer.save()
+            response = {
+                'code':201,
+                'message':"Savol muvaffaqiyatli qo'shildi",
+                'data':serializer.data
+            }
+            return Response(response,status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        
+class TestDetailAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self,request,test_id):
+        try:
+            test = Test.objects.get(id=test_id)
+        except Test.DoesNotExist:
+            response = {
+                'code':404,
+                'message':"Test mavjud emas!",
+            }
+            return Response(response,status=status.HTTP_404_NOT_FOUND)
+        serializer = TestDetailSerializer(test)
+        response = {
+            'code':200,
+            'message':"Testlar ro'yhati",
+            'data':serializer.data
+        }
+        return Response(response,status=status.HTTP_200_OK)
+    
+        
