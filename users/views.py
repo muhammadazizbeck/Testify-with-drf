@@ -25,7 +25,7 @@ class RegisterAPIView(APIView):
         user_data = serializer.save()
         response = {
             'code':201,
-            'message':"Ro'yhatdan muvaffaqiyatli o'tdingiz,Emailingizga yuborilgan bir martalik parol orqali emailingizni tasdiqlang!",
+            'message':"Ro'yhatdan muvaffaqiyatli o'tdingiz,Login sahifasi orqali tizimdan foydalanishingiz mumkin",
             'data':user_data
         }
 

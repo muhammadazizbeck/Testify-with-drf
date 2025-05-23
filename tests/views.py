@@ -61,28 +61,31 @@ class PaidTestAPIView(APIView):
 class QuestionCreateAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self,request,test_id):
+    def post(self, request, test_id):
+        if not request.user.is_superuser:
+            return Response(
+                {'code': 403, 'message': "Faqat superuser savol qo‘shishi mumkin"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
         try:
             test = Test.objects.get(id=test_id)
         except Test.DoesNotExist:
-            response = {
-                'code':400,
-                'message':"Test topilmadi"
-            }
-            return Response(response,status=status.HTTP_404_NOT_FOUND)
-        
-        serializer = QuestionCreateSerializer(data=request.data,context={'test':test})
+            return Response(
+                {'code': 400, 'message': "Test topilmadi"},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
+        serializer = QuestionCreateSerializer(data=request.data, context={'test': test})
         if serializer.is_valid():
             serializer.save()
-            response = {
-                'code':201,
-                'message':"Savol muvaffaqiyatli qo'shildi",
-                'data':serializer.data
-            }
-            return Response(response,status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                'code': 201,
+                'message': "Savol muvaffaqiyatli qo'shildi",
+                'data': serializer.data
+            }, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 class TestDetailAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]

@@ -65,7 +65,7 @@ class QuestionCreateSerializer(serializers.ModelSerializer):
         return Question.objects.create(test=test,**validated_data)
 
 class TestDetailSerializer(serializers.ModelSerializer):
-    questions = QuestionCreateSerializer(many=True,read_only=True)
+    questions = QuestionCreateSerializer(many=True,read_only=True,help_text="Testga tegishli barcha savollar ro‘yxati")
 
     class Meta:
         model = Test
@@ -78,7 +78,7 @@ class TestDetailSerializer(serializers.ModelSerializer):
             'price': {'help_text': 'Test narxi'},
             'question_count': {'help_text': 'Test nechta savoldan tashkil topgan'},
             'duration': {'help_text': 'Testni yechish uchun necha daqiqa beriladi'},
-            'questions': {'Barcha savollar'}
+            'questions': {'help_text':'Barcha savollar'}
         }
 
     

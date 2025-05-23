@@ -48,13 +48,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.is_active = True 
         user.save()
 
-        refresh = RefreshToken.for_user(user)
         return {
             'user_id': user.id,
             'username': user.username,
             'email': user.email,
-            'access_token': str(refresh.access_token),
-            'refresh_token': str(refresh),
+
         }
 
 class LoginSerializer(serializers.Serializer):
