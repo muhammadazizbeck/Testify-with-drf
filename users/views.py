@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.utils import timezone
+from drf_yasg.utils import swagger_auto_schema
 
 
 from users.models import CustomUser
@@ -19,6 +20,11 @@ User = CustomUser
 # Create your views here.
 
 class RegisterAPIView(APIView):
+    @swagger_auto_schema(
+        request_body=RegisterSerializer,
+        responses={201: RegisterSerializer},
+        operation_description="Ro'yhatdan o'tish"
+    )
     def post(self,request):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -32,6 +38,11 @@ class RegisterAPIView(APIView):
         return Response(response,status=status.HTTP_201_CREATED)
     
 class LoginAPIView(APIView):
+    @swagger_auto_schema(
+        request_body=LoginSerializer,
+        responses={200: LoginSerializer},
+        operation_description="Testdagi savollar ro'yhati"
+    )
     def post(self,request):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -46,6 +57,7 @@ class LoginAPIView(APIView):
     
 class LogoutAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
     def post(self,request):
         try:
             refresh_token = request.data['refresh']
@@ -64,6 +76,12 @@ class LogoutAPIView(APIView):
             return Response(response,status=status.HTTP_400_BAD_REQUEST)
         
 class ChangePasswordAPIView(APIView):
+
+    @swagger_auto_schema(
+        request_body=ChangePasswordSerializer,
+        responses={200: ChangePasswordSerializer},
+        operation_description="Parolni almashtirish"
+    )
     def post(self,request):
         serializer = ChangePasswordSerializer(data=request.data,context = {"request":request})
         if serializer.is_valid():
