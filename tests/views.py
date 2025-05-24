@@ -13,12 +13,6 @@ from tests.models import Test,Category,Question
 class CategoryAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    @swagger_auto_schema(
-        request_body=CategorySerializer,
-        responses={200: CategorySerializer},
-        operation_description="Yangi test yaratish (faqat superuser)"
-    )
-
     def get(self,request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories,many=True)
@@ -60,11 +54,6 @@ class CategoryCreateAPIView(APIView):
 class CategoryDetailAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    @swagger_auto_schema(
-        request_body=CategoryDetailSerializer,
-        responses={200: CategoryDetailSerializer},
-        operation_description="Categoriyadagi testlar ro'yhati" 
-    )
 
     def get(self,request,category_id):
         try:
@@ -114,12 +103,6 @@ class TestCreateAPIView(APIView):
 class FreeTestAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    @swagger_auto_schema(
-        request_body=TestSerializer,
-        responses={200: TestSerializer},
-        operation_description="Tekin testlar ro'yhatini olish"
-    )
-
     def get(self,request):
         tests = Test.objects.filter(is_paid=False)
         serializer = TestSerializer(tests,many=True)
@@ -132,12 +115,6 @@ class FreeTestAPIView(APIView):
     
 class PaidTestAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-
-    @swagger_auto_schema(
-        request_body=TestSerializer,
-        responses={200: TestSerializer},
-        operation_description="Pulli testlar ro'yhatini olish"
-    )
 
     def get(self,request):
         tests = Test.objects.filter(is_paid=True)
@@ -187,12 +164,6 @@ class QuestionCreateAPIView(APIView):
         
 class TestDetailAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-
-    @swagger_auto_schema(
-        request_body=TestDetailSerializer,
-        responses={200: TestDetailSerializer},
-        operation_description="Testdagi savollar ro'yhati"
-    )
 
     def get(self,request,test_id):
         try:
