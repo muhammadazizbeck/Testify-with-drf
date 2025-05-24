@@ -9,7 +9,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
-        fields = ['id','title','description','is_paid','price','question_count','duration']
+        fields = ['id',"image",'title','description','is_paid','price','question_count','duration']
 
 class CategoryDetailSerializer(serializers.ModelSerializer):
     tests = TestSerializer(many=True,read_only=True)
@@ -21,7 +21,7 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
 class TestCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
-        fields = ['id','title','description','is_paid','price','question_count','duration']
+        fields = ['id',"image",'title','description','is_paid','price','question_count','duration']
 
     def validate(self,data):
         if data.get('is_paid') and not data.get('price'):
@@ -34,7 +34,7 @@ class TestCreateSerializer(serializers.ModelSerializer):
 class QuestionCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ['text','option_1','option_2','option_3','option_4','correct_option']
+        fields = ['text',"image",'option_1','option_2','option_3','option_4','correct_option']
 
     def validate(self,data):
         correct_option = data.get('correct_option')
@@ -54,7 +54,7 @@ class TestDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id','title','description','is_paid','price','question_count','duration','questions']
+        fields = ['id',"image",'title','description','is_paid','price','question_count','duration','questions']
 
 
     
