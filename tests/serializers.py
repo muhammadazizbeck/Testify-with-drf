@@ -9,7 +9,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
-        fields = ['id',"image",'title','description','is_paid','price','question_count','duration']
+        fields = ['id',"category","image",'title','description','is_paid','price','question_count','duration']
 
 class CategoryDetailSerializer(serializers.ModelSerializer):
     tests = TestSerializer(many=True,read_only=True)
@@ -21,7 +21,7 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
 class TestCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
-        fields = ['id',"image",'title','description','is_paid','price','question_count','duration']
+        fields = ['id',"category","image",'title','description','is_paid','price','question_count','duration']
 
     def validate(self,data):
         if data.get('is_paid') and not data.get('price'):
