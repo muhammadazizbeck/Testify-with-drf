@@ -5,10 +5,66 @@ from rest_framework import permissions,status
 from rest_framework.response import Response
 
 from tests.serializers import TestCreateSerializer,TestSerializer,QuestionCreateSerializer,\
-    TestDetailSerializer
-from tests.models import Test
+    TestDetailSerializer,CategorySerializer,CategoryDetailSerializer
+from tests.models import Test,Category,Question
 
 # Create your views here.
+
+class CategoryAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self,request):
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories,many=True)
+        response = {
+            'code':200,
+            'message':"Barcha categoriyalar",
+            'data':serializer.data
+        }
+        return Response(response,status=status.HTTP_200_OK)
+    
+class CategoryCreateAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self,request):
+        if not request.user.is_superuser:
+            response = {
+                'code':403,
+                'message':'Faqatgina super-userlar yarata oladi'
+            }
+            return Response(response,status=status.HTTP_403_FORBIDDEN)
+        
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            response = {
+                'code':201,
+                'message':"Categoriya muvaffaqiyatli yaratildi",
+                'data':serializer.data
+            }
+            return Response(response,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class CategoryDetailAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self,request,category_id):
+        try:
+            category = Category.objects.get(id=category_id)
+        except Category.DoesNotExist:
+            response = {
+                'code':404,
+                "message":'Bunday category mavjud emas'
+            }
+            return Response(response,status=status.HTTP_404_NOT_FOUND)
+        serializer = CategoryDetailSerializer(category)
+        response = {
+            'code':200,
+            'message':'Categoriya tavsilotlari',
+            'data':serializer.data
+        }
+        return Response(response,status=status.HTTP_200_OK)
+
 
 class TestCreateAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -89,6 +145,7 @@ class QuestionCreateAPIView(APIView):
         
 class TestDetailAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
     def get(self,request,test_id):
         try:
             test = Test.objects.get(id=test_id)

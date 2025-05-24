@@ -1,34 +1,27 @@
 from rest_framework import serializers
-from tests.models import Test,Question
+from tests.models import Test,Question,Category
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['title']
 
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ['id','title','description','is_paid','price','question_count','duration']
-        extra_kwargs = {
-            'id': {'help_text': 'Testning maxsus raqami'},
-            'title': {'help_text': 'Testning nomi'},
-            'description': {'help_text': 'Testning tavsifi'},
-            'is_paid': {'help_text': 'Test pullikmi yoki bepul'},
-            'price': {'help_text': 'Test narxi'},
-            'question_count': {'help_text': 'Test nechta savoldan tashkil topgan'},
-            'duration': {'help_text': 'Testni yechish uchun necha daqiqa beriladi'}
-        }
+
+class CategoryDetailSerializer(serializers.ModelSerializer):
+    tests = TestSerializer(many=True,read_only=True)
+    
+    class Meta:
+        model = Category
+        fields = ['title','tests']
 
 class TestCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ['id','title','description','is_paid','price','question_count','duration']
-        extra_kwargs = {
-            'id': {'help_text': 'Testning maxsus raqami'},
-            'title': {'help_text': 'Testning nomi'},
-            'description': {'help_text': 'Testning tavsifi'},
-            'is_paid': {'help_text': 'Test pullikmi yoki bepul'},
-            'price': {'help_text': 'Test narxi'},
-            'question_count': {'help_text': 'Test nechta savoldan tashkil topgan'},
-            'duration': {'help_text': 'Testni yechish uchun necha daqiqa beriladi'}
-        }
 
     def validate(self,data):
         if data.get('is_paid') and not data.get('price'):
@@ -42,14 +35,6 @@ class QuestionCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ['text','option_1','option_2','option_3','option_4','correct_option']
-        extra_kwargs = {
-            'text': {'help_text': 'Savol'},
-            'option_1': {'help_text': 'Birinchi tanlov uchun javob'},
-            'option_2': {'help_text': 'Ikkinchi tanlov uchun javob'},
-            'option_3': {'help_text': 'Uchinchi tanlov uchun javob'},
-            'option_4': {'help_text': "To'rtinchi tanlov uchun javob"},
-            'correct_option': {'help_text': "To'g'ri javobni kiriting [1,2,3,4 orasidan]"},
-        }
 
     def validate(self,data):
         correct_option = data.get('correct_option')
@@ -65,20 +50,11 @@ class QuestionCreateSerializer(serializers.ModelSerializer):
         return Question.objects.create(test=test,**validated_data)
 
 class TestDetailSerializer(serializers.ModelSerializer):
-    questions = QuestionCreateSerializer(many=True,read_only=True,help_text="Testga tegishli barcha savollar ro‘yxati")
+    questions = QuestionCreateSerializer(many=True,read_only=True)
 
     class Meta:
         model = Test
         fields = ['id','title','description','is_paid','price','question_count','duration','questions']
-        extra_kwargs = {
-            'id': {'help_text': 'Testning maxsus raqami'},
-            'title': {'help_text': 'Testning nomi'},
-            'description': {'help_text': 'Testning tavsifi'},
-            'is_paid': {'help_text': 'Test pullikmi yoki bepul'},
-            'price': {'help_text': 'Test narxi'},
-            'question_count': {'help_text': 'Test nechta savoldan tashkil topgan'},
-            'duration': {'help_text': 'Testni yechish uchun necha daqiqa beriladi'},
-            'questions': {'help_text':'Barcha savollar'}
-        }
+
 
     
