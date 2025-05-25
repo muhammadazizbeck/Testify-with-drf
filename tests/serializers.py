@@ -4,7 +4,7 @@ from tests.models import Test,Question,Category
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['title']
+        fields = ["id",'title']
 
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,7 +16,7 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Category
-        fields = ['title','tests']
+        fields = ["id",'title','tests']
 
 class TestCreateSerializer(serializers.ModelSerializer):
     class Meta:
