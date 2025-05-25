@@ -3,6 +3,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
 from rest_framework import permissions,status
 from rest_framework.response import Response
+from drf_yasg import openapi
 
 from tests.serializers import TestCreateSerializer,TestSerializer,QuestionCreateSerializer,\
     TestDetailSerializer,CategorySerializer,CategoryDetailSerializer
@@ -60,8 +61,13 @@ class CategoryDetailAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'category_id', openapi.IN_PATH, description="Category ID", type=openapi.TYPE_INTEGER
+            )
+        ],
         responses={200: CategoryDetailSerializer},
-        operation_description="Categoriya ichidagi testlar ro'yhati"
+        operation_description="Categoriyadagi savollar ro'yhati"
     )
 
     def get(self,request,category_id):
@@ -150,9 +156,13 @@ class QuestionCreateAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     @swagger_auto_schema(
-        request_body=QuestionCreateSerializer,
-        responses={201: QuestionCreateSerializer},
-        operation_description="Yangi savol yaratish (faqat superuser)"
+        manual_parameters=[
+            openapi.Parameter(
+                'test_id', openapi.IN_PATH, description="Test ID", type=openapi.TYPE_INTEGER
+            )
+        ],
+        responses={200: QuestionCreateSerializer},
+        operation_description="Yangi savollar yaratish"
     )
 
     def post(self, request, test_id):
@@ -185,6 +195,11 @@ class TestDetailAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'test_id', openapi.IN_PATH, description="Test ID", type=openapi.TYPE_INTEGER
+            )
+        ],
         responses={200: TestDetailSerializer},
         operation_description="Testdagi savollar ro'yhati"
     )
