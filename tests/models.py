@@ -31,7 +31,7 @@ class Question(models.Model):
     test = models.ForeignKey('Test', related_name='questions', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='question_images/',blank=True,null=True)
     text = models.TextField()
-    correct_answer = models.CharField(max_length=255)
+    correct_option = models.CharField(max_length=255)
 
 
     def __str__(self):
