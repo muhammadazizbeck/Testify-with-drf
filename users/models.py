@@ -25,7 +25,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True) 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-
+    balance = models.DecimalField(max_digits=9,decimal_places=2,default=0)
+    coins = models.PositiveIntegerField(default=0)
+    
     USERNAME_FIELD = 'email'  
     REQUIRED_FIELDS = ['username']
 
@@ -34,19 +36,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-# class EmailOTP(models.Model):
-#     email = models.EmailField()
-#     otp_code = models.CharField(max_length=6)
-#     created_at = models.DateTimeField(auto_now_add=True)
 
-#     def is_expired(self):
-#         return self.created_at < timezone.now() - timezone.timedelta(minutes=5)
-
-#     @classmethod
-#     def generate_otp(cls, email):
-#         cls.objects.filter(email=email).delete()
-#         otp_code = "".join(str(random.randint(1, 9)) for _ in range(6))
-#         return cls.objects.create(email=email, otp_code=otp_code)
 
     
 

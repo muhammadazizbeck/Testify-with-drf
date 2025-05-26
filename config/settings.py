@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     #internal
     'users',
     'tests',
+    "billing",
     "interface",
 
     #external

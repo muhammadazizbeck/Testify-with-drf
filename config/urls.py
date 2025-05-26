@@ -24,6 +24,7 @@ urlpatterns = [
    path('',include('interface.urls')),
    path('users/',include('users.urls')),
    path('tests/',include('tests.urls')),
+   path('billing/',include('billing.urls')),
    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger'),
    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
