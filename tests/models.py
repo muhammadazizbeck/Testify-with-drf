@@ -31,8 +31,13 @@ class Question(models.Model):
     test = models.ForeignKey('Test', related_name='questions', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='question_images/',blank=True,null=True)
     text = models.TextField()
-    correct_option = models.CharField(max_length=255)
 
+    option_1 = models.CharField(max_length=255)
+    option_2 = models.CharField(max_length=255)
+    option_3 = models.CharField(max_length=255)
+    option_4 = models.CharField(max_length=255)
+
+    correct_option = models.CharField(max_length=255)
 
     def __str__(self):
         return self.text
@@ -44,6 +49,6 @@ class TestResult(models.Model):
     score_persentage = models.DecimalField(max_digits=5,decimal_places=2)
     coins_earned = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    
 
     
