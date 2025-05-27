@@ -19,7 +19,7 @@ class UserAccountAPIView(APIView):
     )
 
     def get(self,request):
-        serializer = UserProfileSerializer(user=request.user)
+        serializer = UserProfileSerializer(instance = request.user)
         response = {
             'code':200,
             'message':"Foydalanuvchi accounti malumotlari",
