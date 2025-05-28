@@ -8,8 +8,8 @@ urlpatterns = [
     path('create-test/',views.TestCreateAPIView.as_view(),name='create-test'),
     path('categories/',views.CategoryAPIView.as_view(),name='categories'),
     path('create-category/',views.CategoryCreateAPIView.as_view(),name='create-category'),
-    path('<int:test_id>/datail/',views.TestDetailAPIView.as_view(),name='question-list'),
+    path('<int:test_id>/test-datail/',views.TestDetailAPIView.as_view(),name='question-list'),
     path('<int:test_id>/submit-test/',views.SubmitTestAPIView.as_view(),name='submit-test'),
-    path('<int:category_id>/detail/',views.CategoryDetailAPIView.as_view(),name='create-category'),
+    path('<int:category_id>/category-detail/',views.CategoryDetailAPIView.as_view(),name='create-category'),
     path('<int:test_id>/create-questions/',views.QuestionCreateAPIView.as_view(),name='create-test'),
 ]
