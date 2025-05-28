@@ -55,7 +55,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = [
             'id', 'text', 'image',
-            'option_1', 'option_2', 'option_3', 'option_4',
+            'option_1', 'option_2', 'option_3', 'option_4','correct_option'
         ]
 
 class TestDetailSerializer(serializers.ModelSerializer):
