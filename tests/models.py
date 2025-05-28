@@ -49,6 +49,7 @@ class TestResult(models.Model):
     score_persentage = models.DecimalField(max_digits=5,decimal_places=2)
     coins_earned = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_first_attempt = models.BooleanField(default=False)
     
 
     

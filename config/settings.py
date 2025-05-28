@@ -112,6 +112,16 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Tashkent'
 
+# CLICK_SERVICE_ID = "your-service-id"
+# CLICK_MERCHANT_ID = "your-merchant-id"
+# CLICK_SECRET_KEY = "your-secret-key"
+
+# CLICK_ACCOUNT_MODEL = "users.models.CustomUser" 
+# CLICK_AMOUNT_FIELD = "balance" 
+
+# CLICK_COMMISSION_PERCENT = 0
+# CLICK_DISABLE_ADMIN = False 
+
 
 
 # Password validation

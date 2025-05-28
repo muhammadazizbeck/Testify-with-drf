@@ -4,10 +4,11 @@ from rest_framework.views import APIView
 from rest_framework import permissions,status
 from rest_framework.response import Response
 from drf_yasg import openapi
+from decimal import Decimal
 
 from tests.serializers import TestCreateSerializer,TestSerializer,QuestionCreateSerializer,\
     TestDetailSerializer,CategorySerializer,CategoryDetailSerializer
-from tests.models import Test,Category,Question
+from tests.models import Test,Category,Question,TestResult
 
 # Create your views here.
 
@@ -224,6 +225,55 @@ class TestDetailAPIView(APIView):
 
 class SubmitTestAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
+    def post(self,request,test_id):
+        try:
+            test = Test.objects.get(id=test_id)
+        except Test.DoesNotExist:
+            response = {
+                'code':404,
+                "error":"Test topilmadi"
+            }
+            return Response(response,status=status.HTTP_404_NOT_FOUND)
+        
+        answers = request.data.get("answers",{})
+        questions = test.questions.all()
+        correct = 0
+        total = questions.count()
+
+        for question in questions:
+            user_answer = answers.get(str(question.id))
+            if user_answer and user_answer.strip()==question.correct_option.strip():
+                correct += 1
+
+        percentage = (correct / total) * 100 if total > 0 else 0
+        percentage_decimal = Decimal(str(round(percentage, 2)))
+
+        is_first_attempt = not TestResult.objects.filter(user=request.user, test=test).exists()
+        coins = int(percentage) if is_first_attempt else 0
+
+        result = TestResult.objects.create(
+            user=request.user,
+            test=test,
+            score_percentage=percentage_decimal,
+            coins_earned=coins,
+            is_first_attempt=is_first_attempt
+        )
+
+        if is_first_attempt:
+            request.user.coins += coins
+            request.user.save()
+
+        return Response({
+            "test": test.title,
+            "score_percentage": percentage_decimal,
+            "coins_earned": coins,
+            "is_first_attempt": is_first_attempt,
+            "total_questions": total,
+            "correct_answers": correct,
+        }, status=201)
+
+
 
     
     

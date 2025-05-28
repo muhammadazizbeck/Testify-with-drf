@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from tests.models import Test,Question,Category
+from tests.models import Test,Question,Category,TestResult
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -55,6 +55,12 @@ class TestDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ['id',"image",'title','description','is_paid','price','question_count','duration','questions']
+
+    
+class TestResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestResult
+        fields = ['id', 'test', 'score_persentage', 'coins_earned', 'created_at']
 
 
     
