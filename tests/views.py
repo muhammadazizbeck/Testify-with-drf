@@ -204,23 +204,21 @@ class TestDetailAPIView(APIView):
         responses={200: TestDetailSerializer},
         operation_description="Testdagi savollar ro'yhati"
     )
-
-    def get(self,request,test_id):
+    def get(self, request, test_id):
         try:
             test = Test.objects.get(id=test_id)
         except Test.DoesNotExist:
-            response = {
-                'code':404,
-                'message':"Test mavjud emas!",
-            }
-            return Response(response,status=status.HTTP_404_NOT_FOUND)
+            return Response({
+                'code': 404,
+                'message': "Test mavjud emas!"
+            }, status=status.HTTP_404_NOT_FOUND)
+
         serializer = TestDetailSerializer(test)
-        response = {
-            'code':200,
-            'message':"Testlar ro'yhati",
-            'data':serializer.data
-        }
-        return Response(response,status=status.HTTP_200_OK)
+        return Response({
+            'code': 200,
+            'message': "Test va uning savollari",
+            'data': serializer.data
+        }, status=status.HTTP_200_OK)
     
 
 class SubmitTestAPIView(APIView):

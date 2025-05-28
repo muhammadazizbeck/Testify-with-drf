@@ -48,9 +48,18 @@ class QuestionCreateSerializer(serializers.ModelSerializer):
         if test.questions.count() >= test.question_count:
             raise serializers.ValidationError("Test uchun maksimal savollar soni {test.question_count}")
         return Question.objects.create(test=test,**validated_data)
+    
+
+class QuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = [
+            'id', 'text', 'image',
+            'option_1', 'option_2', 'option_3', 'option_4',
+        ]
 
 class TestDetailSerializer(serializers.ModelSerializer):
-    questions = QuestionCreateSerializer(many=True,read_only=True)
+    questions = QuestionSerializer(many=True,read_only=True)
 
     class Meta:
         model = Test
@@ -61,6 +70,8 @@ class TestResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestResult
         fields = ['id', 'test', 'score_persentage', 'coins_earned', 'created_at']
+
+
 
 
     
