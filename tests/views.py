@@ -68,25 +68,25 @@ class CategoryDetailAPIView(APIView):
             )
         ],
         responses={200: CategoryDetailSerializer},
-        operation_description="Categoriyadagi savollar ro'yhati"
+        operation_description="Categoriyaga tegishli testlar ro'yxatini olish"
     )
-
-    def get(self,request,category_id):
+    def get(self, request, category_id):
         try:
             category = Category.objects.get(id=category_id)
         except Category.DoesNotExist:
             response = {
-                'code':404,
-                "message":'Bunday category mavjud emas'
+                'code': 404,
+                "message": "Bunday category mavjud emas"
             }
-            return Response(response,status=status.HTTP_404_NOT_FOUND)
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+
         serializer = CategoryDetailSerializer(category)
         response = {
-            'code':200,
-            'message':'Categoriya tavsilotlari',
-            'data':serializer.data
+            'code': 200,
+            'message': 'Categoriya va unga tegishli testlar ro‘yxati',
+            'data': serializer.data
         }
-        return Response(response,status=status.HTTP_200_OK)
+        return Response(response, status=status.HTTP_200_OK)
 
 
 class TestCreateAPIView(APIView):
