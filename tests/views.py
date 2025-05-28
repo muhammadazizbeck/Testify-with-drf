@@ -270,6 +270,45 @@ class SubmitTestAPIView(APIView):
             "total_questions": total,
             "correct_answers": correct,
         }, status=201)
+    
+
+class UnlockTestAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self,request,test_id):
+        user = request.user
+        try:
+            test = Test.objects.get(id=test_id)
+        except Test.DoesNotExist:
+            response = {
+                'code':404,
+                'error':"Test topilmadi"
+            }
+            return Response(response,status=status.HTTP_404_NOT_FOUND)
+        
+        if not test.is_paid:
+            return Response({'message':"Bu test bepul to'lov talab qilinmaydi!"})
+        
+        already_taken = TestResult.objects.filter(user=user,test=test).exists()
+
+        if already_taken:
+            return Response({"message":"Bu testni oldin yechgansiz to'lov talab qilinmaydi!"})
+        
+        use_coins = request.data.get("use_coins",False)
+        if use_coins:
+            required_coins = int(test.price/Decimal(10))
+            if user.coins < required_coins:
+                return Response({'error':f"Yetarli coin mavjud emas!,Kerak:{required_coins} coin"},status=400)
+            user.coins -= required_coins
+        else:
+            if user.balance < test.price:
+                return Response({'error':f"Balansingiz yetarli emas!,Kerak:{test.price} so'm"},status=400)
+            user.balance -= test.price
+        
+        user.save()
+        return Response({"message":"Test muvaffaqiyatli ochildi,testga kirishingiz mumkin"})
+        
+        
 
 
 
