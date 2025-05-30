@@ -19,6 +19,7 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
         fields = ["id",'title','tests']
 
 class TestCreateSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField()
     class Meta:
         model = Test
         fields = ['id',"category","image",'title','description','is_paid','price','question_count','duration']
