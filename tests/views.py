@@ -1,8 +1,11 @@
 from django.shortcuts import render,get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
+
 from rest_framework.views import APIView
 from rest_framework import permissions,status
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
+
 from drf_yasg import openapi
 from decimal import Decimal
 
@@ -91,30 +94,31 @@ class CategoryDetailAPIView(APIView):
 
 class TestCreateAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
     @swagger_auto_schema(
         request_body=TestCreateSerializer,
         responses={201: TestCreateSerializer},
         operation_description="Yangi test yaratish (faqat superuser)"
     )
-
-    def post(self,request):
+    def post(self, request):
         if not request.user.is_superuser:
-            response = {
-                "code":403,
-                'message':'Faqatgina super-userlar test yarata oladi!'
-            }
-            return Response(response,status=status.HTTP_403_FORBIDDEN)
+            return Response({
+                "code": 403,
+                'message': 'Faqatgina super-userlar test yarata oladi!'
+            }, status=status.HTTP_403_FORBIDDEN)
+
         serializer = TestCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            response = {
-                'code':201,
-                'message':'Test muvaffaqiyatli yaratildi!',
-                "data":serializer.data
-            }
-            return Response(response,status=status.HTTP_201_CREATED)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                'code': 201,
+                'message': 'Test muvaffaqiyatli yaratildi!',
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class FreeTestAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -274,6 +278,15 @@ class SubmitTestAPIView(APIView):
 
 class UnlockTestAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'use_coins', openapi.IN_PATH, description="Pulli testlarni ochish uchun coindan foydalanadimi", type=openapi.TYPE_BOOLEAN
+            )
+        ],
+        operation_description="Pullik testlarni ochish"
+    )
 
     def post(self,request,test_id):
         user = request.user
