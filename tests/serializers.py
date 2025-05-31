@@ -18,6 +18,8 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
         model = Category
         fields = ["id",'title','tests']
 
+#123
+
 class TestCreateSerializer(serializers.ModelSerializer):
     image = serializers.ImageField()
     class Meta:
