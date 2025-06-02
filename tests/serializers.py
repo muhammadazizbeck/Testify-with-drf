@@ -18,7 +18,7 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
         model = Category
         fields = ["id",'title','tests']
 
-#123
+#stop ducking me
 
 class TestCreateSerializer(serializers.ModelSerializer):
     image = serializers.ImageField()
